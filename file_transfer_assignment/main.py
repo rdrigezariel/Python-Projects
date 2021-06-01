@@ -1,29 +1,38 @@
+
+# Required modules
+from tkinter import *
+import tkinter as tk
 import shutil
 import os
 import time
 from datetime import datetime, timedelta
 
-cwd = os.getcwd()
-source = cwd + '/folderA/'
-destination = cwd + '/folderB/'
+# Custom modules
+import func
+import gui
 
-filesA = os.listdir(source)
-filesB = os.listdir(destination)
-files_to_transfer = []
-filesB_length = len(filesB)
-timecheck = datetime.now() - timedelta(1)
+# Frame is the Tkinter frame class that our own class will inherit from
+class ParentWindow(Frame):
+    def __init__(self, master, *args, **kwargs):
+        Frame.__init__(self, master, *args, **kwargs)
 
+        # Define our master frame configuration
+        self.master = master
 
-for a in filesA:
-    timestampA = os.path.getmtime(source+a)
-    i = 0
-    for b in filesB:
-        i += 1
-        timestampB = os.path.getmtime(destination+b)
-        if a == b and timestampA != timestampB and datetime.strptime(time.ctime(timestampA), '%a %b %d %H:%M:%S %Y') > timecheck:
-            shutil.move(os.path.join(source, a), os.path.join(destination, b))
-            break
-        elif a != b and i == filesB_length:
-            shutil.move(os.path.join(source, a), os.path.join(destination, a))
+        # Window Size
+        self.master.minsize(675,125) #(Height, Width)
+        self.master.maxsize(675,125)
+
+        # Window Title
+        self.master.title("The File Transfer Demo")
+
+        # func.center_window method will center our app on the user's screen
+        func.center_window(self,500,300)
+
+        # load in the GUI widgets
+        gui.load_gui(self)
         
-
+if __name__ == "__main__":
+    root = tk.Tk()
+    App = ParentWindow(root)
+    root.mainloop()
