@@ -52,10 +52,10 @@ def process_files(self):
     filesFrom = os.listdir(from_folder)
     filesTo = os.listdir(to_folder)
 
-    filesToTransfer = []
     filesToLength = len(filesTo)
 
     timecheck = datetime.now() - timedelta(1)
+    timenow = datetime.now()
 
     for a in filesFrom:
         timestampA = os.path.getmtime(from_folder+'/'+a)
@@ -63,7 +63,9 @@ def process_files(self):
         for b in filesTo:
             i += 1
             timestampB = os.path.getmtime(to_folder+'/'+b)
-            if a == b and timestampA != timestampB and datetime.strptime(time.ctime(timestampA), '%a %b %d %H:%M:%S %Y') > timecheck:
+            if a == b and timestampA == timestampB:
+                break
+            elif a == b and timestampA != timestampB and datetime.strptime(time.ctime(timestampA), '%a %b %d %H:%M:%S %Y') >= timecheck and datetime.strptime(time.ctime(timestampA), '%a %b %d %H:%M:%S %Y') <= timenow:
                 shutil.move(os.path.join(from_folder, a), os.path.join(to_folder, b))
                 break
             elif a != b and i == filesToLength:
