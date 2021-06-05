@@ -58,18 +58,27 @@ def process_files(self):
     timenow = datetime.now()
 
     for a in filesFrom:
-        timestampA = os.path.getmtime(from_folder+'/'+a)
-        i = 0
-        for b in filesTo:
-            i += 1
-            timestampB = os.path.getmtime(to_folder+'/'+b)
-            if a == b and timestampA == timestampB:
-                break
-            elif a == b and timestampA != timestampB and datetime.strptime(time.ctime(timestampA), '%a %b %d %H:%M:%S %Y') >= timecheck and datetime.strptime(time.ctime(timestampA), '%a %b %d %H:%M:%S %Y') <= timenow:
-                shutil.move(os.path.join(from_folder, a), os.path.join(to_folder, b))
-                break
-            elif a != b and i == filesToLength:
-                shutil.move(os.path.join(from_folder, a), os.path.join(to_folder, a))
+
+        if filesToLength == 0:
+            shutil.move(os.path.join(from_folder, a), to_folder)
+        else:
+            timestampA = os.path.getmtime(from_folder + '/' + a)
+            i = 0
+
+            for b in filesTo:
+                i += 1
+                timestampB = os.path.getmtime(to_folder + '/' + b)
+
+                if a == b:
+                    if timestampA == timestampB:
+                        break
+                    else:
+                        if datetime.strptime(time.ctime(timestampA), '%a %b %d %H:%M:%S %Y') >= timecheck and datetime.strptime(time.ctime(timestampA), '%a %b %d %H:%M:%S %Y') <= timenow:
+                            shutil.move(os.path.join(from_folder, a), os.path.join(to_folder, b))
+                            break
+                else:
+                    if i == filesToLength:
+                        shutil.move(os.path.join(from_folder, a), os.path.join(to_folder, a))
 
     
     messagebox.showinfo(title="Success", message="Files were successfully processed!")
